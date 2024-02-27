@@ -16,13 +16,14 @@ def setup_logger():
     )
 
 
-def get_gitlab_repos(api_key, keyword, per_page=20):
+def get_gitlab_repos(api_key, keyword, per_page=20, additional_filters=None):
     """
     Search GitLab repositories using the specified keyword and handle pagination.
 
     :param api_key: GitLab API key for authentication.
     :param keyword: Keyword to search for in the repositories.
     :param per_page: Number of results per page.
+    :param additional_filters: Dictionary of additional search filters such as {'language': 'Python'}.
     :return: List of repositories.
     """
     all_repos = []
@@ -30,6 +31,9 @@ def get_gitlab_repos(api_key, keyword, per_page=20):
     api_url = "https://gitlab.com/api/v4/projects"
     headers = {"PRIVATE-TOKEN": api_key}
     params = {"search": keyword, "per_page": per_page}
+
+    if additional_filters:
+        params.update(additional_filters)
 
     try:
         initial_response = requests.get(api_url, headers=headers, params=params)
